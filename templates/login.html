@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Login - IDP System{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>🎯 AI-Based IDP System</h1>
+            <p>Empowering Career Growth Through Intelligent Development Plans</p>
+            <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                Powered by Google Gemini AI
+            </small>
+        </div>
+        
+        <form method="POST" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required placeholder="your.email@company.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <span class="text-muted">Don't have an account?</span>
+            <a href="{{ url_for('auth.register') }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none;"> Register</a>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 10px; font-weight: 600;">📌 Demo Accounts (Try Now!):</p>
+            <div style="background: var(--light-bg); padding: 1rem; border-radius: 8px; margin-top: 10px;">
+                <div style="margin-bottom: 12px; padding: 8px; background: white; border-radius: 6px; border-left: 4px solid #2563eb;">
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">👤 HR/ADMIN ACCESS</p>
+                    <p style="font-size: 0.875rem; color: var(--text-primary); margin-bottom: 4px;">
+                        <strong>Email:</strong> hr@company.com
+                    </p>
+                    <p style="font-size: 0.875rem; color: var(--text-primary);">
+                        <strong>Password:</strong> <code style="background: #dbeafe; padding: 2px 8px; border-radius: 4px; font-weight: 600;">hr123</code>
+                    </p>
+                </div>
+                <div style="padding: 8px; background: white; border-radius: 6px; border-left: 4px solid #10b981;">
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">👨‍💼 EMPLOYEE ACCESS</p>
+                    <p style="font-size: 0.875rem; color: var(--text-primary); margin-bottom: 4px;">
+                        <strong>Email:</strong> john@company.com
+                    </p>
+                    <p style="font-size: 0.875rem; color: var(--text-primary);">
+                        <strong>Password:</strong> <code style="background: #d1fae5; padding: 2px 8px; border-radius: 4px; font-weight: 600;">emp123</code>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Override main padding for login page */
+    main {
+        padding: 0;
+    }
+</style>
+{% endblock %}

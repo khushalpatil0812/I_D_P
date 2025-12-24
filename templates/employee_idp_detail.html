@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}IDP Details{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">IDP Details</h1>
+
+<div class="card">
+    <div class="card-header">Skill Gap: {{ idp.skill_gap }}</div>
+    
+    <div style="margin-bottom: 20px;">
+        <p><strong>Status:</strong> <span class="badge badge-{{ idp.status.replace('_', '-') }}">{{ idp.status.replace('_', ' ').title() }}</span></p>
+        <p><strong>Created:</strong> {{ idp.created_at.strftime('%B %d, %Y') }}</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <h3 style="color: #667eea; margin-bottom: 15px;">📋 Action Plan</h3>
+        <p style="line-height: 1.6;">{{ idp.action }}</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px;">
+            <h4 style="color: #0066cc; margin-bottom: 10px;">⏰ Timeline</h4>
+            <p>{{ idp.timeline }}</p>
+        </div>
+        <div style="background: #e7ffe7; padding: 15px; border-radius: 5px;">
+            <h4 style="color: #00aa00; margin-bottom: 10px;">📊 Success Metric</h4>
+            <p>{{ idp.metric }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Update Progress</div>
+    
+    <form method="POST" action="{{ url_for('employee.update_progress', idp_id=idp.id) }}">
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="pending" {% if idp.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="in_progress" {% if idp.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="completed" {% if idp.status == 'completed' %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="completion">Completion Percentage</label>
+            <input type="range" id="completion" name="completion" min="0" max="100" 
+                   value="{{ progress.completion if progress else 0 }}" 
+                   oninput="document.getElementById('completion-value').textContent = this.value + '%'">
+            <p style="text-align: center; margin-top: 5px;">
+                <strong id="completion-value">{{ progress.completion if progress else 0 }}%</strong>
+            </p>
+        </div>
+        
+        <div class="form-group">
+            <label for="feedback">Progress Notes / Feedback</label>
+            <textarea id="feedback" name="feedback" rows="4" placeholder="Share your progress, challenges, or achievements...">{{ progress.feedback if progress else '' }}</textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Update Progress</button>
+        <a href="{{ url_for('employee.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </form>
+    
+    {% if progress %}
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+        <p style="color: #777; font-size: 14px;">Last updated: {{ progress.updated_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

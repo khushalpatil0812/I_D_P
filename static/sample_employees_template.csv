@@ -1,0 +1,4 @@
+name,email,skills,experience,goal,current_role,target_role,password
+John Doe,john.doe@company.com,"Python, JavaScript, SQL",3,Become a Full Stack Developer,Junior Developer,Full Stack Developer,password123
+Jane Smith,jane.smith@company.com,"Python, Data Analysis, ML",2,Become a Data Scientist,Data Analyst,Data Scientist,password123
+Mike Johnson,mike.johnson@company.com,"Docker, Kubernetes, AWS",4,Become a Senior DevOps Engineer,DevOps Engineer,Senior DevOps Engineer,password123

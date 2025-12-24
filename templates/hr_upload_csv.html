@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Employees - CSV{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">📤 Bulk Employee Upload</h1>
+    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+        Save time by importing multiple employees at once using CSV format
+    </p>
+</div>
+
+<div class="card">
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">📋 CSV File Requirements</h2>
+        <p style="color: var(--text-secondary); margin: 0;">Follow these guidelines to ensure successful import</p>
+    </div>
+    
+    <div style="background: rgba(6,182,212,0.1); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #06b6d4; margin-bottom: 2rem;">
+        <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">📊 Required CSV Columns</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div>
+                <p style="margin: 0.5rem 0;"><strong style="color: #10b981;">✅ name</strong> (required) - Employee full name</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #10b981;">✅ email</strong> (required) - Unique email address for login</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ password</strong> (optional) - Default: password123</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ current_role</strong> (optional) - Current position</p>
+            </div>
+            <div>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ target_role</strong> (optional) - Career goal position</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ skills</strong> (optional) - Comma-separated skills list</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ experience</strong> (optional) - Years of experience (number)</p>
+                <p style="margin: 0.5rem 0;"><strong style="color: #6b7280;">⚪ goal</strong> (optional) - Career goal description</p>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" id="uploadForm" style="margin-bottom: 2rem;">
+        <div class="form-group">
+            <label for="file" style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">📎 Select CSV File</label>
+            <input type="file" id="file" name="file" accept=".csv" required 
+                   onchange="validateCSVFile(this)"
+                   style="padding: 1rem; border: 2px dashed rgba(102,126,234,0.5); background: rgba(102,126,234,0.05); cursor: pointer; transition: all 0.3s;">
+            <small id="file-name-display" style="color: var(--text-secondary); display: block; margin-top: 0.5rem;"></small>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button type="submit" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); flex: 1; min-width: 200px;">
+                ✅ Upload and Process
+            </button>
+            <a href="{{ url_for('hr.employees') }}" class="btn" style="background: #6b7280; flex: 1; min-width: 200px; text-align: center;">
+                ❌ Cancel
+            </a>
+        </div>
+    </form>
+
+    <div style="padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📄 Sample CSV Format</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Here's an example of how your CSV file should be structured:
+        </p>
+        <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.1);">
+            <pre style="margin: 0; font-size: 0.875rem; color: #10b981; font-family: 'Courier New', monospace; line-height: 1.6;">name,email,skills,experience,goal,current_role,target_role,password
+John Doe,john.doe@company.com,"Python, JavaScript, SQL",3,Become a Full Stack Developer,Junior Developer,Full Stack Developer,password123
+Jane Smith,jane.smith@company.com,"Python, Data Analysis, ML",2,Become a Data Scientist,Data Analyst,Data Scientist,password123
+Bob Johnson,bob.johnson@company.com,"Java, Spring Boot, Docker",5,Lead development team,Senior Developer,Tech Lead,password123</pre>
+        </div>
+        
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="{{ url_for('static', filename='sample_employees_template.csv') }}" 
+               class="btn" 
+               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: inline-flex; align-items: center; gap: 0.5rem;" 
+               download>
+                ⬇️ Download Sample Template
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Tips Section -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none;">
+    <h3 style="color: white; margin-bottom: 1rem;">💡 Pro Tips for CSV Upload</h3>
+    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Use the Template:</strong> Download our sample template to ensure correct formatting</li>
+        <li><strong>Check for Duplicates:</strong> System will skip employees with existing email addresses</li>
+        <li><strong>Skills Format:</strong> Use double quotes for skills lists (e.g., "Python, SQL, Docker")</li>
+        <li><strong>Validation:</strong> Emails must be unique and properly formatted</li>
+        <li><strong>Bulk Processing:</strong> You can upload hundreds of employees in one go</li>
+        <li><strong>Review After Upload:</strong> Check the employee list to verify successful import</li>
+    </ul>
+</div>
+{% endblock %}

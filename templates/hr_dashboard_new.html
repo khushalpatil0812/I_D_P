@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}HR Dashboard{% endblock %}
+
+{% block content %}
+<h1 style="color: var(--text-primary); margin-bottom: 30px;">📊 HR Dashboard</h1>
+
+<!-- Quick Actions -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h3 style="margin-bottom: 1rem;">⚡ Quick Actions</h3>
+    <div class="btn-group">
+        <a href="{{ url_for('hr.add_employee') }}" class="btn btn-primary">
+            ➕ Add Employee
+        </a>
+        <a href="{{ url_for('hr.upload_csv') }}" class="btn btn-success">
+            📤 Upload CSV
+        </a>
+        <a href="{{ url_for('hr.add_role') }}" class="btn btn-warning">
+            🎯 Add Role
+        </a>
+        <a href="{{ url_for('hr.reports') }}" class="btn btn-secondary">
+            📈 View Reports
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="dashboard-grid">
+    <div class="stat-card" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+        <h3>Total Employees</h3>
+        <div class="stat-value">{{ stats.total_employees }}</div>
+        <p>Active in system</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+        <h3>Total IDPs</h3>
+        <div class="stat-value">{{ stats.total_idps }}</div>
+        <p>Development plans created</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+        <h3>Pending IDPs</h3>
+        <div class="stat-value">{{ stats.pending_idps }}</div>
+        <p>Awaiting action</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <h3>Completed IDPs</h3>
+        <div class="stat-value">{{ stats.completed_idps }}</div>
+        <p>Successfully finished</p>
+    </div>
+</div>
+
+<!-- Recent Employees -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">👥 Recent Employees</h2>
+        <p class="card-subtitle">Latest additions to the team</p>
+    </div>
+    
+    {% if recent_employees %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Experience</th>
+                    <th>Target Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in recent_employees %}
+                <tr>
+                    <td><strong>{{ employee.name }}</strong></td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.current_role or 'Not set' }}</td>
+                    <td>
+                        <span class="badge badge-primary">{{ employee.experience }} years</span>
+                    </td>
+                    <td>{{ employee.target_role or 'Not set' }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ url_for('hr.employee_detail', user_id=employee.id) }}" 
+                               class="btn btn-primary btn-sm">
+                                👁️ View
+                            </a>
+                            <a href="{{ url_for('hr.generate_idp', user_id=employee.id) }}" 
+                               class="btn btn-success btn-sm"
+                               onclick="return confirmGenerateIDP({{ employee.id }}, '{{ employee.name }}')">
+                                🎯 Generate IDP
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <strong>ℹ️ No employees found</strong>
+        <p style="margin-top: 0.5rem;">Get started by adding employees or uploading a CSV file.</p>
+    </div>
+    {% endif %}
+    
+    <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="{{ url_for('hr.employees') }}" class="btn btn-primary">
+            View All Employees →
+        </a>
+    </div>
+</div>
+{% endblock %}

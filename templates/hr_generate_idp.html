@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Generate IDP{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">Generate IDP for {{ employee.name }}</h1>
+
+<div class="card">
+    <div class="card-header">Employee Profile</div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div>
+            <p><strong>Name:</strong> {{ employee.name }}</p>
+            <p><strong>Current Role:</strong> {{ employee.current_role or 'Not specified' }}</p>
+            <p><strong>Experience:</strong> {{ employee.experience }} years</p>
+        </div>
+        <div>
+            <p><strong>Current Skills:</strong> {{ employee.skills or 'Not specified' }}</p>
+            <p><strong>Career Goal:</strong> {{ employee.goal or 'Not specified' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">IDP Configuration</div>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="target_role">Target Role *</label>
+            <select id="target_role" name="target_role" required>
+                <option value="">Select target role</option>
+                {% for role in roles %}
+                <option value="{{ role.role_name }}" {% if employee.target_role == role.role_name %}selected{% endif %}>
+                    {{ role.role_name }}
+                </option>
+                {% endfor %}
+            </select>
+            <small style="color: #777;">The system will analyze skill gaps based on this role</small>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <p style="font-size: 14px; color: #555;">
+                <strong>ℹ️ How it works:</strong><br>
+                The AI engine will:
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Compare employee's current skills with required skills for the target role</li>
+                    <li>Identify skill gaps</li>
+                    <li>Generate SMART (Specific, Measurable, Actionable, Relevant, Time-bound) recommendations using Gemini AI</li>
+                    <li>Create actionable development plans</li>
+                </ul>
+            </p>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Generate SMART IDP</button>
+        <a href="{{ url_for('hr.employee_detail', user_id=employee.id) }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

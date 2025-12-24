@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}HR Dashboard{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">HR Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_employees }}</div>
+        <div class="stat-label">Total Employees</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_idps }}</div>
+        <div class="stat-label">Total IDPs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.pending_idps }}</div>
+        <div class="stat-label">Pending IDPs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.completed_idps }}</div>
+        <div class="stat-label">Completed IDPs</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Recent Employees</div>
+    
+    {% if recent_employees %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Experience</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in recent_employees %}
+            <tr>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.current_role or 'Not set' }}</td>
+                <td>{{ employee.experience }} years</td>
+                <td>
+                    <a href="{{ url_for('hr.employee_detail', user_id=employee.id) }}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No employees found.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('hr.employees') }}" class="btn btn-primary">View All Employees</a>
+        <a href="{{ url_for('hr.add_employee') }}" class="btn btn-success">Add New Employee</a>
+    </div>
+</div>
+{% endblock %}

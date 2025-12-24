@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Employees{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">👥 Employee Management Center</h1>
+    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+        Manage your workforce, view employee profiles, and create development plans
+    </p>
+</div>
+
+<!-- Quick Actions -->
+<div class="dashboard-grid" style="margin-bottom: 2rem;">
+    <div class="card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none;">
+        <h3 style="color: white; margin-bottom: 0.5rem;">➕ Add New Employee</h3>
+        <p style="margin-bottom: 1rem; opacity: 0.9;">Onboard new team members</p>
+        <a href="{{ url_for('hr.add_employee') }}" class="btn" style="background: white; color: #10b981;">
+            Add Employee
+        </a>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; border: none;">
+        <h3 style="color: white; margin-bottom: 0.5rem;">📤 Bulk Upload</h3>
+        <p style="margin-bottom: 1rem; opacity: 0.9;">Import multiple employees via CSV</p>
+        <a href="{{ url_for('hr.upload_csv') }}" class="btn" style="background: white; color: #2563eb;">
+            Upload CSV
+        </a>
+    </div>
+</div>
+
+<!-- Employee List -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+            <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">👔 All Employees ({{ employees|length }})</h2>
+            <p style="color: var(--text-secondary); margin: 0;">View and manage employee profiles and development plans</p>
+        </div>
+    </div>
+    
+    {% if employees %}
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Target Role</th>
+                    <th>Skills</th>
+                    <th>Experience</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td><strong style="color: var(--primary-color);">{{ employee.name }}</strong></td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.current_role or '-' }}</td>
+                    <td>
+                        {% if employee.target_role %}
+                        <span style="color: #10b981; font-weight: 500;">🎯 {{ employee.target_role }}</span>
+                        {% else %}
+                        <span style="color: #6b7280;">Not set</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ employee.skills[:30] + '...' if employee.skills and employee.skills|length > 30 else employee.skills or '-' }}</td>
+                    <td><span style="font-weight: 500;">{{ employee.experience }} yrs</span></td>
+                    <td>
+                        <a href="{{ url_for('hr.employee_detail', user_id=employee.id) }}" class="btn btn-small" style="margin-right: 0.5rem;">
+                            👁️ View
+                        </a>
+                        <a href="{{ url_for('hr.create_manual_idp', user_id=employee.id) }}" class="btn btn-small" style="background: #06b6d4; margin-right: 0.5rem;">
+                            ✏️ Manual IDP
+                        </a>
+                        <a href="{{ url_for('hr.generate_idp', user_id=employee.id) }}" class="btn btn-small" style="background: #10b981;">
+                            🤖 AI IDP
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border: 2px dashed rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">No Employees Found</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Get started by adding your first employee or importing multiple employees via CSV
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('hr.add_employee') }}" class="btn" style="background: #10b981;">
+                ➕ Add First Employee
+            </a>
+            <a href="{{ url_for('hr.upload_csv') }}" class="btn" style="background: #2563eb;">
+                📤 Upload CSV
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Help Section -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none;">
+    <h3 style="color: white; margin-bottom: 1rem;">💡 Employee Management Tips</h3>
+    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>View Details:</strong> Click "View" to see comprehensive employee information and career progress</li>
+        <li><strong>Generate IDPs:</strong> Use AI to create personalized development plans based on employee profiles</li>
+        <li><strong>Bulk Import:</strong> Save time by uploading multiple employees at once using our CSV template</li>
+        <li><strong>Keep Profiles Updated:</strong> Ensure employee skills and goals are current for accurate AI recommendations</li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Add Role{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">Add New Role</h1>
+
+<div class="card">
+    <div class="card-header">Role Information</div>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="role_name">Role Name *</label>
+            <input type="text" id="role_name" name="role_name" required placeholder="e.g., Full Stack Developer">
+        </div>
+        
+        <div class="form-group">
+            <label for="required_skills">Required Skills (comma-separated) *</label>
+            <textarea id="required_skills" name="required_skills" rows="4" required placeholder="e.g., Python, JavaScript, React, Node.js, SQL, Git"></textarea>
+            <small style="color: #777;">List all skills required for this role, separated by commas</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3" placeholder="Brief description of the role"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Add Role</button>
+        <a href="{{ url_for('hr.roles') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

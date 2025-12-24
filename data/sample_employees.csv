@@ -1,0 +1,4 @@
+name,email,password,skills,experience,goal,current_role,target_role
+Jane Smith,jane@company.com,emp123,"Python,SQL,Excel",3,Transition to Data Science,Business Analyst,Data Scientist
+Mike Johnson,mike@company.com,emp123,"JavaScript,HTML,CSS",2,Become Full Stack Developer,Frontend Developer,Full Stack Developer
+Sarah Williams,sarah@company.com,emp123,"Java,Spring Boot,MySQL",5,Lead development team,Senior Developer,Tech Lead

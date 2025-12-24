@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">🚀 My Career Development Journey</h1>
+    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+        Welcome, {{ current_user.name }}! Track your progress and achieve your professional goals
+    </p>
+</div>
+
+<!-- Profile Quick View -->
+<div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <h3 style="color: white; margin-bottom: 0.5rem;">👤 {{ current_user.name }}</h3>
+            <p style="opacity: 0.9; margin-bottom: 0.5rem;">{{ current_user.email }}</p>
+            <p style="opacity: 0.9; margin-bottom: 0;">
+                <strong>Current Role:</strong> {{ current_user.current_role or 'Not set' }} | 
+                <strong>Target:</strong> {{ current_user.target_role or 'Not set' }} |
+                <strong>Experience:</strong> {{ current_user.experience }} years
+            </p>
+        </div>
+        <a href="{{ url_for('employee.profile') }}" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+            ✏️ Edit Profile
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Grid -->
+<div class="dashboard-grid">
+    <div class="stat-card" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+        <h3>📋 Total IDPs</h3>
+        <div class="stat-value">{{ stats.total }}</div>
+        <p>Development plans assigned</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+        <h3>⏳ Pending</h3>
+        <div class="stat-value">{{ stats.pending }}</div>
+        <p>Awaiting your action</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+        <h3>🔄 In Progress</h3>
+        <div class="stat-value">{{ stats.in_progress }}</div>
+        <p>Currently working on</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+        <h3>✅ Completed</h3>
+        <div class="stat-value">{{ stats.completed }}</div>
+        <p>Goals achieved!</p>
+    </div>
+</div>
+
+<!-- My Development Plans Section -->
+<div class="card" style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+            <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">📚 My Individual Development Plans</h2>
+            <p style="color: var(--text-secondary); margin: 0;">Track and manage your career development initiatives</p>
+        </div>
+    </div>
+
+    {% if idps %}
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Skill Gap</th>
+                    <th>Action Plan</th>
+                    <th>Timeline</th>
+                    <th>Success Metric</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for idp in idps %}
+                <tr>
+                    <td><strong style="color: var(--primary-color);">{{ idp.skill_gap }}</strong></td>
+                    <td>{{ idp.action[:60] + '...' if idp.action|length > 60 else idp.action }}</td>
+                    <td><span style="font-weight: 500;">📅 {{ idp.timeline }}</span></td>
+                    <td>{{ idp.metric[:40] + '...' if idp.metric|length > 40 else idp.metric }}</td>
+                    <td>
+                        {% if idp.status == 'not_started' %}
+                        <span class="badge" style="background-color: #6b7280;">⏸️ Not Started</span>
+                        {% elif idp.status == 'in_progress' %}
+                        <span class="badge" style="background-color: #06b6d4;">🔄 In Progress</span>
+                        {% elif idp.status == 'completed' %}
+                        <span class="badge" style="background-color: #10b981;">✅ Completed</span>
+                        {% else %}
+                        <span class="badge" style="background-color: #f59e0b;">{{ idp.status.replace('_', ' ').title() }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('employee.idp_detail', idp_id=idp.id) }}" class="btn btn-small">
+                            📖 View Details
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border: 2px dashed rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">No Development Plans Yet</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Your HR team will create a personalized development plan tailored to your career goals soon.
+        </p>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            💡 Tip: Make sure your profile is complete to help HR create the best plan for you
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Quick Tips Section -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none;">
+    <h3 style="color: white; margin-bottom: 1rem;">💡 Pro Tips for Career Success</h3>
+    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Update Progress Regularly:</strong> Keep your IDP progress current to track your growth journey</li>
+        <li><strong>Complete Your Profile:</strong> Ensure all skills and certifications are listed for better AI recommendations</li>
+        <li><strong>Set Clear Goals:</strong> Define specific target roles to get more focused development plans</li>
+        <li><strong>Engage with HR:</strong> Communicate your career aspirations and get personalized guidance</li>
+        <li><strong>Review Your Plans:</strong> Check your IDPs weekly to stay on track with your development goals</li>
+    </ul>
+</div>
+{% endblock %}

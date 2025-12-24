@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Details{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">Employee Details</h1>
+
+<div class="card">
+    <div class="card-header">
+        {{ employee.name }}
+        <div style="float: right; display: flex; gap: 10px;">
+            <a href="{{ url_for('hr.create_manual_idp', user_id=employee.id) }}" class="btn" style="background: #06b6d4;">
+                ✏️ Create Manual IDP
+            </a>
+            <a href="{{ url_for('hr.generate_idp', user_id=employee.id) }}" class="btn btn-success">
+                🤖 AI Generate IDP
+            </a>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div>
+            <p><strong>Email:</strong> {{ employee.email }}</p>
+            <p><strong>Experience:</strong> {{ employee.experience }} years</p>
+            <p><strong>Current Role:</strong> {{ employee.current_role or 'Not set' }}</p>
+            <p><strong>Target Role:</strong> {{ employee.target_role or 'Not set' }}</p>
+        </div>
+        <div>
+            <p><strong>Skills:</strong> {{ employee.skills or 'Not specified' }}</p>
+            <p><strong>Career Goal:</strong> {{ employee.goal or 'Not specified' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Individual Development Plans (IDPs)</div>
+    
+    {% if idps %}
+    <table>
+        <thead>
+            <tr>
+                <th>Skill Gap</th>
+                <th>Action</th>
+                <th>Timeline</th>
+                <th>Status</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idp in idps %}
+            <tr>
+                <td>{{ idp.skill_gap }}</td>
+                <td>{{ idp.action[:50] + '...' if idp.action|length > 50 else idp.action }}</td>
+                <td>{{ idp.timeline }}</td>
+                <td><span class="badge badge-{{ idp.status }}">{{ idp.status }}</span></td>
+                <td>{{ idp.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No IDPs generated yet.</p>
+    <div style="display: flex; gap: 10px; margin-top: 1rem;">
+        <a href="{{ url_for('hr.create_manual_idp', user_id=employee.id) }}" class="btn" style="background: #06b6d4;">
+            ✏️ Create Manual IDP
+        </a>
+        <a href="{{ url_for('hr.generate_idp', user_id=employee.id) }}" class="btn btn-success">
+            🤖 AI Generate IDP
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('hr.employees') }}" class="btn btn-secondary">Back to Employees</a>
+{% endblock %}

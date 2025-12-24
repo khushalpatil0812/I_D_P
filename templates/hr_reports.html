@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">IDP Reports & Analytics</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_employees }}</div>
+        <div class="stat-label">Total Employees</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_idps }}</div>
+        <div class="stat-label">Total IDPs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ idp_by_status.pending }}</div>
+        <div class="stat-label">Pending IDPs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ idp_by_status.in_progress }}</div>
+        <div class="stat-label">In Progress</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">IDP Status Distribution</div>
+    
+    <div style="padding: 20px;">
+        <div style="margin-bottom: 15px;">
+            <span class="badge badge-pending">Pending</span>
+            <span style="margin-left: 10px; font-size: 18px; font-weight: bold;">{{ idp_by_status.pending }}</span>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <span class="badge badge-in-progress">In Progress</span>
+            <span style="margin-left: 10px; font-size: 18px; font-weight: bold;">{{ idp_by_status.in_progress }}</span>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <span class="badge badge-completed">Completed</span>
+            <span style="margin-left: 10px; font-size: 18px; font-weight: bold;">{{ idp_by_status.completed }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Summary</div>
+    <p>Total employees enrolled in development programs: <strong>{{ total_employees }}</strong></p>
+    <p>Total IDPs generated: <strong>{{ total_idps }}</strong></p>
+    <p>Completion rate: <strong>{{ ((idp_by_status.completed / total_idps * 100) if total_idps > 0 else 0)|round(1) }}%</strong></p>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 30px;">My Profile</h1>
+
+<div class="card">
+    <div class="card-header">
+        Personal Information
+        <a href="{{ url_for('employee.edit_profile') }}" class="btn btn-primary" style="float: right; padding: 5px 15px; font-size: 14px;">Edit Profile</a>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <div>
+            <h3 style="color: #667eea; margin-bottom: 15px;">Basic Info</h3>
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Experience:</strong> {{ user.experience }} years</p>
+            <p><strong>Current Role:</strong> {{ user.current_role or 'Not specified' }}</p>
+            <p><strong>Target Role:</strong> {{ user.target_role or 'Not specified' }}</p>
+        </div>
+        <div>
+            <h3 style="color: #667eea; margin-bottom: 15px;">Skills & Goals</h3>
+            <p><strong>Current Skills:</strong></p>
+            <div style="margin: 10px 0;">
+                {% if user.skills %}
+                    {% for skill in user.get_skills_list() %}
+                        <span class="badge badge-completed" style="margin: 3px;">{{ skill }}</span>
+                    {% endfor %}
+                {% else %}
+                    <span style="color: #777;">No skills listed</span>
+                {% endif %}
+            </div>
+            <p style="margin-top: 15px;"><strong>Career Goal:</strong></p>
+            <p style="color: #555;">{{ user.goal or 'Not specified' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Account Details</div>
+    <p><strong>Account Created:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>
+    <p><strong>Account Type:</strong> {{ user.role.title() }}</p>
+</div>
+{% endblock %}

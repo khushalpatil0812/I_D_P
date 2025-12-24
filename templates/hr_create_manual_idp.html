@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Create Manual IDP{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">✏️ Create Manual IDP</h1>
+    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+        Manually create a customized Individual Development Plan for {{ employee.name }}
+    </p>
+</div>
+
+<!-- Employee Info Card -->
+<div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <h3 style="color: white; margin-bottom: 0.5rem;">👤 {{ employee.name }}</h3>
+            <p style="opacity: 0.9; margin-bottom: 0.5rem;">{{ employee.email }}</p>
+            <p style="opacity: 0.9; margin-bottom: 0;">
+                <strong>Current Role:</strong> {{ employee.current_role or 'Not set' }} | 
+                <strong>Target:</strong> {{ employee.target_role or 'Not set' }} |
+                <strong>Experience:</strong> {{ employee.experience }} years
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Manual IDP Form -->
+<div class="card">
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">📋 Development Plan Details</h2>
+        <p style="color: var(--text-secondary); margin: 0;">
+            Create a SMART (Specific, Measurable, Achievable, Relevant, Time-bound) development plan
+        </p>
+    </div>
+    
+    <form method="POST">
+        <!-- Skill Gap Section -->
+        <div style="background: rgba(239,68,68,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #ef4444;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">🎯 Skill Gap (Specific)</h3>
+            
+            <div class="form-group">
+                <label for="skill_gap">What skill or competency needs development? *</label>
+                <input type="text" id="skill_gap" name="skill_gap" 
+                       placeholder="e.g., Advanced React.js, Cloud Architecture, Leadership Skills" 
+                       required>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                    Be specific about the skill gap - this is what the employee needs to learn or improve
+                </small>
+            </div>
+        </div>
+
+        <!-- Action Plan Section -->
+        <div style="background: rgba(16,185,129,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #10b981;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">📚 Action Plan (Achievable & Relevant)</h3>
+            
+            <div class="form-group">
+                <label for="action">What specific actions will the employee take? *</label>
+                <textarea id="action" name="action" rows="4" 
+                          placeholder="e.g., Complete online course 'Advanced React Patterns' on Udemy, build 2 projects using hooks and context API, attend weekly React.js meetups" 
+                          required></textarea>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                    Describe concrete, achievable actions the employee should take to develop this skill
+                </small>
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div style="background: rgba(245,158,11,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #f59e0b;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">⏰ Timeline (Time-bound)</h3>
+            
+            <div class="form-group">
+                <label for="timeline">What is the timeframe for completion? *</label>
+                <input type="text" id="timeline" name="timeline" 
+                       placeholder="e.g., 3 months, 6 weeks, Q1 2026" 
+                       required>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                    Set a realistic deadline - consider the complexity of the skill and employee's workload
+                </small>
+            </div>
+        </div>
+
+        <!-- Success Metric Section -->
+        <div style="background: rgba(6,182,212,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #06b6d4;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">📊 Success Metric (Measurable)</h3>
+            
+            <div class="form-group">
+                <label for="metric">How will success be measured? *</label>
+                <textarea id="metric" name="metric" rows="3" 
+                          placeholder="e.g., Complete course with 90%+ score, deploy 2 production-ready React applications, pass React certification exam" 
+                          required></textarea>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                    Define clear, measurable criteria to determine if the goal has been achieved
+                </small>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div style="background: rgba(107,114,128,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #6b7280;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.1rem;">📌 Initial Status</h3>
+            
+            <div class="form-group">
+                <label for="status">What is the starting status? *</label>
+                <select id="status" name="status" required style="padding: 0.75rem; cursor: pointer;">
+                    <option value="not_started">⏸️ Not Started - Plan created, work hasn't begun</option>
+                    <option value="in_progress">🔄 In Progress - Employee is actively working on this</option>
+                    <option value="pending">⏳ Pending - Awaiting resources or approval</option>
+                </select>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                    Select the appropriate status for this development plan
+                </small>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <button type="submit" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); flex: 1; min-width: 200px;">
+                ✅ Create IDP
+            </button>
+            <a href="{{ url_for('hr.employee_detail', user_id=employee.id) }}" class="btn" style="background: #6b7280; flex: 1; min-width: 200px; text-align: center;">
+                ❌ Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- SMART Guide Section -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+    <h3 style="color: white; margin-bottom: 1rem;">💡 SMART Goals Framework</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div>
+            <strong style="font-size: 1.1rem;">S - Specific</strong>
+            <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">
+                Clearly define what skill needs development
+            </p>
+        </div>
+        <div>
+            <strong style="font-size: 1.1rem;">M - Measurable</strong>
+            <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">
+                Define concrete metrics to track progress
+            </p>
+        </div>
+        <div>
+            <strong style="font-size: 1.1rem;">A - Achievable</strong>
+            <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">
+                Ensure the actions are realistic and attainable
+            </p>
+        </div>
+        <div>
+            <strong style="font-size: 1.1rem;">R - Relevant</strong>
+            <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">
+                Align with employee's career goals and role
+            </p>
+        </div>
+        <div>
+            <strong style="font-size: 1.1rem;">T - Time-bound</strong>
+            <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">
+                Set clear deadlines and timeframes
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Examples Section -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none;">
+    <h3 style="color: white; margin-bottom: 1rem;">📝 Example IDPs</h3>
+    
+    <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <strong>Technical Skill Development:</strong>
+        <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.8;">
+            <li><strong>Skill Gap:</strong> Kubernetes container orchestration</li>
+            <li><strong>Action:</strong> Complete Kubernetes CKA certification course, deploy 3 microservices to production cluster</li>
+            <li><strong>Timeline:</strong> 4 months</li>
+            <li><strong>Metric:</strong> Pass CKA exam, successfully deploy and maintain production workloads</li>
+        </ul>
+    </div>
+    
+    <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+        <strong>Soft Skill Development:</strong>
+        <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.8;">
+            <li><strong>Skill Gap:</strong> Team leadership and mentoring</li>
+            <li><strong>Action:</strong> Mentor 2 junior developers, lead weekly team standups, complete leadership training program</li>
+            <li><strong>Timeline:</strong> 6 months</li>
+            <li><strong>Metric:</strong> Positive feedback from mentees, successfully run 24 team meetings, complete training certification</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

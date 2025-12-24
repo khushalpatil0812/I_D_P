@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Update Progress - IDP{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">📈 Update IDP Progress</h1>
+        <p class="card-subtitle">Track your development plan completion</p>
+    </div>
+    
+    <div class="card-body">
+        <!-- IDP Details -->
+        <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem;">🎯 IDP Details</h3>
+            <div style="display: grid; gap: 1rem;">
+                <div>
+                    <strong>Skill Gap:</strong> {{ idp.skill_gap }}
+                </div>
+                <div>
+                    <strong>Action Plan:</strong> {{ idp.action }}
+                </div>
+                <div>
+                    <strong>Timeline:</strong> <span class="badge badge-primary">{{ idp.timeline }}</span>
+                </div>
+                <div>
+                    <strong>Success Metric:</strong> {{ idp.metric }}
+                </div>
+                <div>
+                    <strong>Current Status:</strong>
+                    {% if idp.status == 'completed' %}
+                        <span class="badge badge-success">✅ {{ idp.status|title }}</span>
+                    {% elif idp.status == 'in_progress' %}
+                        <span class="badge badge-pending">⏳ In Progress</span>
+                    {% else %}
+                        <span class="badge badge-danger">📌 {{ idp.status|title }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Progress -->
+        {% if progress %}
+        <div class="alert alert-info">
+            <strong>📊 Current Progress:</strong> {{ progress.completion }}%
+            <div class="progress" style="margin-top: 0.5rem;">
+                <div id="current-progress-bar" class="progress-bar" style="width: {{ progress.completion }}%;">
+                    {{ progress.completion }}%
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Update Form -->
+        <form method="POST" action="{{ url_for('employee.update_progress', idp_id=idp.id) }}" id="progressForm">
+            <div class="form-group">
+                <label for="completion">Completion Percentage (%)</label>
+                <input type="number" id="completion" name="completion" class="form-control" 
+                       min="0" max="100" value="{{ progress.completion if progress else 0 }}" required
+                       oninput="updateProgressBar('preview-progress-bar', this.value)">
+                <small class="text-muted">Enter a value between 0 and 100</small>
+                
+                <!-- Live Preview -->
+                <div class="progress" style="margin-top: 1rem;">
+                    <div id="preview-progress-bar" class="progress-bar" 
+                         style="width: {{ progress.completion if progress else 0 }}%;">
+                        {{ progress.completion if progress else 0 }}%
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="pending" {% if idp.status == 'pending' %}selected{% endif %}>📌 Pending</option>
+                    <option value="in_progress" {% if idp.status == 'in_progress' %}selected{% endif %}>⏳ In Progress</option>
+                    <option value="completed" {% if idp.status == 'completed' %}selected{% endif %}>✅ Completed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="feedback">Progress Notes & Feedback</label>
+                <textarea id="feedback" name="feedback" class="form-control" rows="6" 
+                          placeholder="Share your progress, challenges, achievements, and any feedback...">{{ progress.feedback if progress else '' }}</textarea>
+                <small class="text-muted">Describe what you've accomplished and any obstacles you've faced</small>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success">
+                    💾 Update Progress
+                </button>
+                <a href="{{ url_for('employee.dashboard') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+        <!-- Progress History -->
+        {% if progress %}
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border-color);">
+            <h3 style="margin-bottom: 1rem;">📜 Last Update</h3>
+            <div style="background: var(--light-bg); padding: 1rem; border-radius: 8px;">
+                <p><strong>Updated:</strong> {{ progress.updated_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <p><strong>Completion:</strong> {{ progress.completion }}%</p>
+                {% if progress.feedback %}
+                <p><strong>Notes:</strong> {{ progress.feedback }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Character counter for feedback
+    addCharacterCounter('feedback', 500);
+    
+    // Initialize progress bars
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentBar = document.getElementById('current-progress-bar');
+        const previewBar = document.getElementById('preview-progress-bar');
+        
+        if (currentBar) {
+            const value = parseInt(currentBar.textContent);
+            updateProgressBar('current-progress-bar', value);
+        }
+        
+        if (previewBar) {
+            const value = parseInt(previewBar.textContent);
+            updateProgressBar('preview-progress-bar', value);
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
