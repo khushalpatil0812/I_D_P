@@ -297,7 +297,9 @@ This project is for educational purposes as part of a Mini Project for F.Y. MCA.
 
 ## Authors
 
-- Iqra Asad Baig (Roll No: 2501010)
 - Nupur Amol Joshi (Roll No: 2501078)
 
 Maharashtra Education Society's Institute of Management and Career Courses (IMCC), Pune
+
+-khushal patil 
+MIT WPU PUNE 
